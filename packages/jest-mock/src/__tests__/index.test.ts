@@ -60,10 +60,13 @@ describe('moduleMocker', () => {
     });
 
     it('retrieves metadata for ES6 classes', () => {
-      class ClassFooMock {}
-      const metadata = moduleMocker.getMetadata(ClassFooMock);
-      expect(metadata.type).toEqual('function');
-      expect(metadata.name).toEqual('ClassFooMock');
+      class ClassFooMock {
+        bar() {}
+      }
+      const fooInstance = new ClassFooMock();
+      const metadata = moduleMocker.getMetadata(fooInstance);
+      expect(metadata.type).toEqual('object');
+      expect(metadata.members.constructor.name).toEqual('ClassFooMock');
     });
 
     it('retrieves synchronous function metadata', () => {
