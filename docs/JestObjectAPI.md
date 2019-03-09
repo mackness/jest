@@ -96,13 +96,31 @@ Given the name of a module, use the automatic mocking system to generate a mocke
 
 This is how `genMockFromModule` will mock the follwing data types:
 
-`Function`
+#### `Function`
 
-A new function will be created. The new function will have an arity of 0 and when called will return `undefined`.
+A new function will be created. The new function will have on formal parameters and when called will return `undefined`. This functionality also applies to `async functions`.
 
-`Async Function`
+#### `Class`
 
-This is useful when you want to create a [manual mock](ManualMocks.md) that extends the automatic mock's behavior.
+A new class will be created. The interface of the original class is maintained however all of the class member functions will be mocked.
+
+#### `Object`
+
+Objects are deeply cloned. Their interfaces are maintained and their values are mocked.
+
+#### `Array`
+
+The original array is ignored and a new empty array is created.
+
+#### `String`
+
+A new copy of the original stirng is mocked.
+
+#### `Number`
+
+A new copy of the original number is mocked.
+
+`genMockFromModule` is useful when you want to create a [manual mock](ManualMocks.md) that extends the automatic mock's behavior.
 
 Example:
 
