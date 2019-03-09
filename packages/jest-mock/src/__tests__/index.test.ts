@@ -60,9 +60,7 @@ describe('moduleMocker', () => {
     });
 
     it('retrieves metadata for ES6 classes', () => {
-      class ClassFooMock {
-        bar() {}
-      }
+      class ClassFooMock {}
       const metadata = moduleMocker.getMetadata(ClassFooMock);
       expect(metadata.type).toEqual('function');
       expect(metadata.name).toEqual('ClassFooMock');
