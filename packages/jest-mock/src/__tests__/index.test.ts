@@ -61,9 +61,7 @@ describe('moduleMocker', () => {
 
     it('retrieves metadata for ES6 classes', () => {
       class ClassFooMock {
-        add(a, b) {
-          return a + b;
-        }
+        bar() {}
       }
       const metadata = moduleMocker.getMetadata(ClassFooMock);
       expect(metadata.type).toEqual('function');
@@ -80,7 +78,6 @@ describe('moduleMocker', () => {
     it('retrieves asynchronous function metadata', () => {
       async function asyncFunctionFooMock() {}
       const metadata = moduleMocker.getMetadata(asyncFunctionFooMock);
-      console.log(metadata);
       expect(metadata.type).toEqual('function');
       expect(metadata.name).toEqual('asyncFunctionFooMock');
     });

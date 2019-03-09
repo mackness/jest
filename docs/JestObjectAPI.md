@@ -94,6 +94,14 @@ _Note: this method was previously called `autoMockOn`. When using `babel-jest`, 
 
 Given the name of a module, use the automatic mocking system to generate a mocked version of the module for you.
 
+This is how `genMockFromModule` will mock the follwing data types:
+
+`Function`
+
+A new function will be created. The new function will have an arity of 0 and when called will return `undefined`.
+
+`Async Function`
+
 This is useful when you want to create a [manual mock](ManualMocks.md) that extends the automatic mock's behavior.
 
 Example:
