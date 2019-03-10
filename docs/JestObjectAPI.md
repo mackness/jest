@@ -154,6 +154,10 @@ module.exports = {
   function: function foo(a, b) {
     return a + b;
   },
+  asyncFunction: async function asyncFoo(a, b) {
+    const result = (await a) + b;
+    return result;
+  },
   class: new class Bar {
     foo() {}
   },
@@ -175,13 +179,16 @@ module.exports = {
 const example = jest.genMockFromModule('./example');
 
 test('should run example code', () => {
-  // a new mocked function with 0 arity.
+  // a new mocked function with no formal arguments.
   expect(example.function.name).toEqual('foo');
   expect(example.function.length).toEqual(0);
-  // a new mocked class that maintains the original interface and mocks member functions
+  // async functions are treated just like standard synchronous functions.
+  expect(example.asyncFunction.name).toEqual('asyncFoo');
+  expect(example.asyncFunction.length).toEqual(0);
+  // a new mocked class that maintains the original interface and mocks member functions.
   expect(example.class.constructor.name).toEqual('Bar');
   expect(example.class.foo.name).toEqual('foo');
-  // a deeploy cloned object that maintains the original interface and mocks it's values
+  // a deeploy cloned object that maintains the original interface and mocks it's values.
   expect(example.object).toEqual({
     baz: 'foo',
     bar: {
@@ -189,11 +196,11 @@ test('should run example code', () => {
       buzz: [],
     },
   });
-  // the original array is ignored and a new emtpy array is mocked
+  // the original array is ignored and a new emtpy array is mocked.
   expect(example.array.length).toEqual(0);
-  // a new copy of the original number
+  // a new copy of the original number.
   expect(example.number).toEqual(123);
-  // a new copy of the original string
+  // a new copy of the original string.
   expect(example.string).toEqual('baz');
 });
 ```
