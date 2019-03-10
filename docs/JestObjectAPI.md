@@ -94,6 +94,31 @@ _Note: this method was previously called `autoMockOn`. When using `babel-jest`, 
 
 Given the name of a module, use the automatic mocking system to generate a mocked version of the module for you.
 
+`genMockFromModule` is useful when you want to create a [manual mock](ManualMocks.md) that extends the automatic mock's behavior.
+
+Example:
+
+```js
+// utils.js
+module.exports = {
+  authorize: () => {
+    return 'token';
+  },
+  isAuthorized: secret => secret === 'wizard',
+};
+```
+
+```js
+// __tests__/genMockFromModule.test.js
+const utils = jest.genMockFromModule('../utils');
+utils.isAuthorized = jest.fn(secret => secret === 'not wizard');
+
+test('implementation created by jest.genMockFromModule', () => {
+  expect(utils.authorize.mock).toBeTruthy();
+  expect(utils.isAuthorized('not wizard')).toEqual(true);
+});
+```
+
 This is how `genMockFromModule` will mock the follwing data types:
 
 #### `Function`
@@ -120,28 +145,54 @@ A new copy of the original stirng is mocked.
 
 A new copy of the original number is mocked.
 
-`genMockFromModule` is useful when you want to create a [manual mock](ManualMocks.md) that extends the automatic mock's behavior.
-
 Example:
 
+<!-- prettier-ignore -->
 ```js
-// utils.js
+// example.js
 module.exports = {
-  authorize: () => {
-    return 'token';
+  function: function foo(a, b) {
+    return a + b;
   },
-  isAuthorized: secret => secret === 'wizard',
+  class: new class Bar {
+    foo() {}
+  },
+  object: {
+    baz: 'foo',
+    bar: {
+      fiz: 1,
+      buzz: [1, 2, 3],
+    },
+  },
+  array: [1, 2, 3],
+  number: 123,
+  string: 'baz',
 };
 ```
 
 ```js
-// __tests__/genMockFromModule.test.js
-const utils = jest.genMockFromModule('../utils');
-utils.isAuthorized = jest.fn(secret => secret === 'not wizard');
-
-test('implementation created by jest.genMockFromModule', () => {
-  expect(utils.authorize.mock).toBeTruthy();
-  expect(utils.isAuthorized('not wizard')).toEqual(true);
+// __tests__/example.test.js
+test('should run example code', () => {
+  // a new mocked function with 0 arity.
+  expect(example.function.name).toEqual('foo');
+  expect(example.function.length).toEqual(0);
+  // a new mocked class that maintains the original interface and mocks member functions
+  expect(example.class.constructor.name).toEqual('Bar');
+  expect(example.class.foo.name).toEqual('foo');
+  // a deeploy cloned object that maintains the original interface and mocks it's values
+  expect(example.object).toEqual({
+    baz: 'foo',
+    bar: {
+      fiz: 1,
+      buzz: [],
+    },
+  });
+  // the original array is ignored and a new emtpy array is mocked
+  expect(example.array.length).toEqual(0);
+  // a new copy of the original number
+  expect(example.number).toEqual(123);
+  // a new copy of the original string
+  expect(example.string).toEqual('baz');
 });
 ```
 
