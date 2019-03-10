@@ -172,6 +172,8 @@ module.exports = {
 
 ```js
 // __tests__/example.test.js
+const example = jest.genMockFromModule('./example');
+
 test('should run example code', () => {
   // a new mocked function with 0 arity.
   expect(example.function.name).toEqual('foo');
