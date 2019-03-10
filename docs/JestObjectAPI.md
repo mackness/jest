@@ -188,7 +188,7 @@ test('should run example code', () => {
   // a new mocked class that maintains the original interface and mocks member functions.
   expect(example.class.constructor.name).toEqual('Bar');
   expect(example.class.foo.name).toEqual('foo');
-  // a deeploy cloned object that maintains the original interface and mocks it's values.
+  // a deeply cloned object that maintains the original interface and mocks it's values.
   expect(example.object).toEqual({
     baz: 'foo',
     bar: {
